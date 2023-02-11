@@ -1,16 +1,16 @@
-const express=require("express");
+const express=require('express');
+ const mongoose=require("mongoose");
+ const cors=require("cors");
+ const app=express()
+ const bodyParser=require('body-parser')
+// const ListModel=require("./models/")
 
-const app=express();
+app.use(express.json());
+app.use(cors()); 
 
-const bodyParser=require("body-parser");
+mongoose.set('strictQuery',true);
 
-const cors=require("cors");
-
-const mongoose =require('mongoose')
-
-mongoose.set('strictQuery', true);
-
-mongoose.connect("mongodb+srv://SivaGuhan:SivaGuhan@cluster0.bxbffps.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser:true});
+mongoose.connect("mongodb+srv://SivaGuhan:SivaGuhan@cluster0.bxbffps.mongodb.net/?retryWrites=true&w=majority").then(()=> console.log("con"))
 
 const Cont=require("./models/profile")
 
@@ -24,6 +24,20 @@ app.post("/add",async(req,res)=>{
         username,role,preference,loc,email
     })
     cont.save().then(console.log('saved'));
+})
+
+app.get("/ngo",async(req,res)=>{
+    Cont.find(async(err,result)=>{
+        console.log(result)
+        res.json(result);
+    })
+})
+
+app.post("/find",(req,res)=>{
+    const {email}=req.body;
+    Cont.find({email},(err,result)=>{
+        res.json(result);
+    })
 })
 
 app.listen(5000,()=>{
